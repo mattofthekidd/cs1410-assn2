@@ -10,6 +10,7 @@
 #include <algorithm>
 
 #include "TestCases.hpp"
+#include "Timer.hpp"
 
 std::vector<int> createVector(int size);
 
@@ -67,9 +68,6 @@ std::vector<int> createVector(int size) {
 	return x;
 }
 
-struct Timer {
-
-};
 
 // ------------------------------------------------------------------
 //
@@ -82,12 +80,12 @@ SortStats bubbleSort(std::vector<int>& list) {
 	report.compareCount = 0;
 	report.swapCount = 0;
 	report.time = 0;
-
+	Timer stopwatch;
 	bool swapped = true;
 
 	//
 	// Grab the starting time
-	std::chrono::time_point<std::chrono::high_resolution_clock> start = std::chrono::high_resolution_clock::now();
+	stopwatch.start = std::chrono::high_resolution_clock::now();
 
 	while (swapped) {
 		swapped = false;
@@ -103,12 +101,12 @@ SortStats bubbleSort(std::vector<int>& list) {
 
 	//
 	// Grab the ending time
-	std::chrono::time_point<std::chrono::high_resolution_clock> end = std::chrono::high_resolution_clock::now();
+	stopwatch.end = std::chrono::high_resolution_clock::now();
 	//
 	// Compute how long it took, then display that duration in seconds.
-	std::chrono::duration<double> time = end - start;
+	//stopwatch.time = stopwatch.end - stopwatch.start;
 
-	report.time = time.count();
+	report.time = totalTime(stopwatch);
 
 	return report;
 }
@@ -124,12 +122,12 @@ SortStats selectionSort(std::vector<int>& list) {
 	report.compareCount = 0;
 	report.swapCount = 0;
 	report.time = 0;
-
+	Timer stopwatch;
 	int minPos = 0;
 
 	//
 	// Grab the starting time
-	std::chrono::time_point<std::chrono::high_resolution_clock> start = std::chrono::high_resolution_clock::now();
+	stopwatch.start = std::chrono::high_resolution_clock::now();
 
 	for (int start = 0; start < list.size() - 1; start++) {
 		minPos = start;
@@ -146,12 +144,12 @@ SortStats selectionSort(std::vector<int>& list) {
 	}
 	//
 	// Grab the ending time
-	std::chrono::time_point<std::chrono::high_resolution_clock> end = std::chrono::high_resolution_clock::now();
+	stopwatch.end = std::chrono::high_resolution_clock::now();
 	//
 	// Compute how long it took, then display that duration in seconds.
-	std::chrono::duration<double> time = end - start;
+	//stopwatch.time = stopwatch.end - stopwatch.start;
 
-	report.time = time.count();
+	report.time = totalTime(stopwatch);
 
 	return report;
 }
