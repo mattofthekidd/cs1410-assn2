@@ -1,67 +1,24 @@
+/**
+*	Matthew Kidd
+*	A00953448
+**/
+
 #include <cstdlib>
 #include <iostream>
 #include <ctime>
+#include <chrono>
 #include <algorithm>
 
 #include "TestCases.hpp"
 
-std::vector<int> createVector(int size) {
-	std::vector<int> x;
-	for (int i = 0; i < size; i++) {
-		x.push_back(rand() % size);
-	}
-	return x;
-}
+std::vector<int> createVector(int size);
 
-SortStats bubbleSort(std::vector<int> &list) {
-	SortStats report;
-	bool swapped = true;
-	int totalSwaps = 0;
-	while (swapped) {
-			swapped = false;
-		for (unsigned int i = 0; i < list.size() - 1; i++) {
-			report.compareCount = i;
-			if (list.at(i) > list.at(i + 1)) {
-				std::swap(list[i], list[i + 1]);
-				totalSwaps++;
-				swapped = true;
-			}
-		}
-	}
+SortStats bubbleSort(std::vector<int>& list);
 
-	report.swapCount = totalSwaps;
-	report.time = 0;
-	return report;
-}
+SortStats selectionSort(std::vector<int>& list);
 
-SortStats selectionSort(std::vector<int> &list) {
-	SortStats report;
-	int minPos = 0;
-	int totalSwaps = 0;
-	report.compareCount = 0;
-	for (int start = 0; start < list.size() - 1; start++) {
-		minPos = start;
-		for (int scanPos = start + 1; scanPos < list.size(); scanPos++) {
-			report.compareCount++;
-			if (list.at(minPos) > list.at(scanPos)) {
-				minPos = scanPos;
-			}
-		}
-		if (minPos != start) {
-			std::swap(list[minPos], list[start]);
-			totalSwaps++;
-		}
-	}
-	report.swapCount = totalSwaps;
-	report.time = 0;
-	return report;
-}
-
-void print(const std::vector<int> &list) {
-	std::cout << "Number of items\t\t: " << list.size() << std::endl;
-	std::cout << "Bubble sort time\t: " << std::endl;
-	std::cout << "Selection sort time :" << std::endl;
-}
+void print(const std::vector<int>& list, const SortStats& reportBubble, const SortStats& reportSelection);
+//Using the timing.cpp file that was given to build this.
 
 // ------------------------------------------------------------------
 //
@@ -78,7 +35,7 @@ void runTestCases()
 	executeTest(testCase2, selectionSort, "Selection Sort: 500 items");
 	executeTest(testCase3, selectionSort, "Selection Sort: 100 to 1000 items");
 
-	//executeTest(testCaseCompare, bubbleSort, selectionSort, "Sort Compare Test");
+	executeTest(testCaseCompare, bubbleSort, selectionSort, "Sort Compare Test");
 }
 
 
@@ -91,31 +48,123 @@ int main()
 	for (int i = 100; i <= 1000; i += 100) {
 		std::vector<int> aList = createVector(i);
 		std::vector<int> bList(aList);
-		
-		//for (int l = 0; l < 10; l++) {
-		//	std::cout << "aList: " << l << ", " << aList.at(l) << std::endl;
-		//	std::cout << "bList: " << l << ", " << bList.at(l) << std::endl;
-		//}
-
-		selectionSort(aList);
-		selectionSort(bList);
-		std::cout << "selection\n";
-		print(aList);
-		print(bList);
-
-		//for (int l = 0; l < 10; l++) {
-		//	std::cout << "aList: " << l << ", " << aList.at(l) << std::endl;
-		//	std::cout << "bList: " << l << ", " << bList.at(l) << std::endl;
-		//}
-
-		aList.erase(aList.begin(), aList.end());
-		aList = createVector(i);
-		bList = aList;
-		std::cout << "bubble\n";
-		print(aList);
-		print(bList);
+		print(aList, bubbleSort(aList), selectionSort(bList));
 	}
-	
 
 	return 0;
 }
+
+// ------------------------------------------------------------------
+//
+// Creates my vectors with random numbers in the range of the vector's size.
+//
+// ------------------------------------------------------------------
+std::vector<int> createVector(int size) {
+	std::vector<int> x;
+	for (int i = 0; i < size; i++) {
+		x.push_back(rand() % size);
+	}
+	return x;
+}
+
+struct Timer {
+
+};
+
+// ------------------------------------------------------------------
+//
+// Bubble sort for vectors
+// Returns the SortStats values: compareCount, swapCount, and time.
+//
+// ------------------------------------------------------------------
+SortStats bubbleSort(std::vector<int>& list) {
+	SortStats report;
+	report.compareCount = 0;
+	report.swapCount = 0;
+	report.time = 0;
+
+	bool swapped = true;
+
+	//
+	// Grab the starting time
+	std::chrono::time_point<std::chrono::high_resolution_clock> start = std::chrono::high_resolution_clock::now();
+
+	while (swapped) {
+		swapped = false;
+		for (unsigned int i = 0; i < list.size() - 1; i++) {
+			report.compareCount++;
+			if (list.at(i) > list.at(i + 1)) {
+				std::swap(list[i], list[i + 1]);
+				report.swapCount++;
+				swapped = true;
+			}
+		}
+	}
+
+	//
+	// Grab the ending time
+	std::chrono::time_point<std::chrono::high_resolution_clock> end = std::chrono::high_resolution_clock::now();
+	//
+	// Compute how long it took, then display that duration in seconds.
+	std::chrono::duration<double> time = end - start;
+
+	report.time = time.count();
+
+	return report;
+}
+
+// ------------------------------------------------------------------
+//
+// Selection sort for vectors
+// Returns the SortStats values: compareCount, swapCount, and time.
+//
+// ------------------------------------------------------------------
+SortStats selectionSort(std::vector<int>& list) {
+	SortStats report;
+	report.compareCount = 0;
+	report.swapCount = 0;
+	report.time = 0;
+
+	int minPos = 0;
+
+	//
+	// Grab the starting time
+	std::chrono::time_point<std::chrono::high_resolution_clock> start = std::chrono::high_resolution_clock::now();
+
+	for (int start = 0; start < list.size() - 1; start++) {
+		minPos = start;
+		for (int scanPos = start + 1; scanPos < list.size(); scanPos++) {
+			report.compareCount++;
+			if (list.at(minPos) > list.at(scanPos)) {
+				minPos = scanPos;
+			}
+		}
+		if (minPos != start) {
+			std::swap(list[minPos], list[start]);
+			report.swapCount++;
+		}
+	}
+	//
+	// Grab the ending time
+	std::chrono::time_point<std::chrono::high_resolution_clock> end = std::chrono::high_resolution_clock::now();
+	//
+	// Compute how long it took, then display that duration in seconds.
+	std::chrono::duration<double> time = end - start;
+
+	report.time = time.count();
+
+	return report;
+}
+
+// ------------------------------------------------------------------
+//
+// Print function
+// Displays the number of items in the vector and the time taken to sort them via bubble and selection sort methods.
+//
+// ------------------------------------------------------------------
+void print(const std::vector<int>& list, const SortStats& reportBubble, const SortStats& reportSelection) {
+	std::cout << "Number of items\t\t: " << list.size() << std::endl;
+	std::cout << "Bubble sort time\t: " << reportBubble.time << std::endl;
+	std::cout << "Selection sort time\t: " << reportSelection.time << std::endl << std::endl;
+}
+
