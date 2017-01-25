@@ -103,9 +103,7 @@ SortStats bubbleSort(std::vector<int>& list) {
 	// Grab the ending time
 	stopwatch.end = std::chrono::high_resolution_clock::now();
 	//
-	// Compute how long it took, then display that duration in seconds.
-	//stopwatch.time = stopwatch.end - stopwatch.start;
-
+	// Compute how long it took, then save that value to SortStats object.
 	report.time = totalTime(stopwatch);
 
 	return report;
@@ -146,9 +144,7 @@ SortStats selectionSort(std::vector<int>& list) {
 	// Grab the ending time
 	stopwatch.end = std::chrono::high_resolution_clock::now();
 	//
-	// Compute how long it took, then display that duration in seconds.
-	//stopwatch.time = stopwatch.end - stopwatch.start;
-
+	// Compute how long it took, then save that value to SortStats object.
 	report.time = totalTime(stopwatch);
 
 	return report;
