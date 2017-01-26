@@ -13,13 +13,9 @@
 #include "Timer.hpp"
 
 std::vector<int> createVector(int size);
-
 SortStats bubbleSort(std::vector<int>& list);
-
 SortStats selectionSort(std::vector<int>& list);
-
 void print(const std::vector<int>& list, const SortStats& reportBubble, const SortStats& reportSelection);
-//Using the timing.cpp file that was given to build this.
 
 // ------------------------------------------------------------------
 //
@@ -120,12 +116,13 @@ SortStats selectionSort(std::vector<int>& list) {
 	report.compareCount = 0;
 	report.swapCount = 0;
 	report.time = 0;
+	typedef std::chrono::high_resolution_clock timer;
 	Timer stopwatch;
 	int minPos = 0;
-
+	
 	//
 	// Grab the starting time
-	stopwatch.start = std::chrono::high_resolution_clock::now();
+	stopwatch.start = timer::now();
 
 	for (int start = 0; start < list.size() - 1; start++) {
 		minPos = start;
