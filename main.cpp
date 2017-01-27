@@ -35,6 +35,11 @@ void runTestCases()
 	executeTest(testCaseCompare, bubbleSort, selectionSort, "Sort Compare Test");
 }
 
+// ------------------------------------------------------------------
+//
+//
+//
+// ------------------------------------------------------------------  
 
 int main()
 {
@@ -45,6 +50,7 @@ int main()
 	for (int i = 100; i <= 1000; i += 100) {
 		std::vector<int> aList = createVector(i);
 		std::vector<int> bList(aList);
+
 		print(aList, bubbleSort(aList), selectionSort(bList));
 	}
 
@@ -72,17 +78,18 @@ std::vector<int> createVector(int size) {
 //
 // ------------------------------------------------------------------
 SortStats bubbleSort(std::vector<int>& list) {
+	Timer stopwatch;
 	SortStats report;
 	report.compareCount = 0;
 	report.swapCount = 0;
 	report.time = 0;
-	Timer stopwatch;
 	bool swapped = true;
 
 	//
 	// Grab the starting time
-	stopwatch.start = std::chrono::high_resolution_clock::now();
-
+	stopwatch.startTimer();
+	//
+	// Sort the vector.
 	while (swapped) {
 		swapped = false;
 		for (unsigned int i = 0; i < list.size() - 1; i++) {
@@ -94,13 +101,12 @@ SortStats bubbleSort(std::vector<int>& list) {
 			}
 		}
 	}
-
 	//
 	// Grab the ending time
-	stopwatch.end = std::chrono::high_resolution_clock::now();
+	stopwatch.endTimer();
 	//
 	// Compute how long it took, then save that value to SortStats object.
-	report.time = totalTime(stopwatch);
+	report.time = stopwatch.elapsedTime(stopwatch);
 
 	return report;
 }
@@ -112,18 +118,18 @@ SortStats bubbleSort(std::vector<int>& list) {
 //
 // ------------------------------------------------------------------
 SortStats selectionSort(std::vector<int>& list) {
+	Timer stopwatch;
 	SortStats report;
 	report.compareCount = 0;
 	report.swapCount = 0;
 	report.time = 0;
-	typedef std::chrono::high_resolution_clock timer;
-	Timer stopwatch;
 	int minPos = 0;
 	
 	//
 	// Grab the starting time
-	stopwatch.start = timer::now();
-
+	stopwatch.startTimer();
+	//
+	// Sort the vector.
 	for (int start = 0; start < list.size() - 1; start++) {
 		minPos = start;
 		for (int scanPos = start + 1; scanPos < list.size(); scanPos++) {
@@ -139,10 +145,10 @@ SortStats selectionSort(std::vector<int>& list) {
 	}
 	//
 	// Grab the ending time
-	stopwatch.end = std::chrono::high_resolution_clock::now();
+	stopwatch.endTimer();
 	//
 	// Compute how long it took, then save that value to SortStats object.
-	report.time = totalTime(stopwatch);
+	report.time = stopwatch.elapsedTime(stopwatch);
 
 	return report;
 }
