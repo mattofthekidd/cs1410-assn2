@@ -131,9 +131,9 @@ SortStats selectionSort(std::vector<int>& list) {
 	stopwatch.startTimer();
 	//
 	// Sort the vector.
-	for (int start = 0; start < list.size() - 1; start++) {
+	for (unsigned int start = 0; start < list.size() - 1; start++) {
 		minPos = start;
-		for (int scanPos = start + 1; scanPos < list.size(); scanPos++) {
+		for (unsigned int scanPos = start + 1; scanPos < list.size(); scanPos++) {
 			report.compareCount++;
 			if (list.at(minPos) > list.at(scanPos)) {
 				minPos = scanPos;
