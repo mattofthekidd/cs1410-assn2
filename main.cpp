@@ -37,14 +37,15 @@ void runTestCases()
 
 // ------------------------------------------------------------------
 //
-//
+// My main function.
+// Runs the test cases and creates two unique vectors.
+// Sends these vectors to a print function that receives them already sorted.
 //
 // ------------------------------------------------------------------  
-
 int main()
 {
 	std::srand(static_cast<unsigned int>(std::time(NULL)));
-	//runTestCases();
+	runTestCases();
 
 	//my tests
 	for (int i = 100; i <= 1000; i += 100) {
